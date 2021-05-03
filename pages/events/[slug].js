@@ -1,4 +1,3 @@
-// export {default} from "./event.page";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
@@ -12,7 +11,6 @@ import styles from "@/styles/Event.module.css";
 
 
 export default function EventPage({ resEvent }) {
-    const router = useRouter();
 
     return (
         <Layout>
@@ -45,33 +43,31 @@ export default function EventPage({ resEvent }) {
 };
 
 
-export async function getStaticPaths() {
-    const res = await axios.get(`${API_URL}/events`)
-    const resEvents = res.data;
+// export async function getStaticPaths() {
+//     const res = await axios.get(`${API_URL}/events`)
+//     const resEvents = res.data;
 
-    const paths = resEvents.map(resEvent => ({
-        params: { slug: resEvent.slug }
-    }))
-    return { paths, fallback: true }
-}
+//     const paths = resEvents.map(resEvent => ({
+//         params: { slug: resEvent.slug }
+//     }))
+//     return { paths, fallback: true }
+// }
 
-export async function getStaticProps({ params }) {
-    // console.log(params);
-    const res = await axios(`${API_URL}/events?slug=${params.slug}`)
-    const resEvents = res.data
-    return {
-        props: { resEvent: resEvents[0] },
-        revalidate: 1
-    }
-}
-
-
-// export async function getServerSideProps ({query}) {
-//     console.log(query);
-//     const res = await axios(`${API_URL}/api/events/${query.slug}`)
+// export async function getStaticProps({ params }) {
+//     // console.log(params);
+//     const res = await axios(`${API_URL}/events?slug=${params.slug}`)
 //     const resEvents = res.data
-//     console.log(resEvents);
 //     return {
-//         props: {resEvent: resEvents[0]}
+//         props: { resEvent: resEvents[0] },
+//         revalidate: 1
 //     }
 // }
+
+
+export async function getServerSideProps({ query }) {
+    const res = await axios(`${API_URL}/events?slug=${query.slug}`)
+    const resEvents = res.data
+    return {
+        props: { resEvent: resEvents[0] }
+    }
+}
